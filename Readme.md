@@ -1,4 +1,11 @@
 # End-to-End K3s Cluster Architecture with Rancher Management
+![K3s](https://img.shields.io/badge/Kubernetes-K3s-326ce5?style=flat-square&logo=kubernetes)
+![Rancher](https://img.shields.io/badge/Rancher-Management-0075a8?style=flat-square&logo=rancher)
+![ARM](https://img.shields.io/badge/Architecture-ARM64-0091bd?style=flat-square&logo=arm)
+![Edge](https://img.shields.io/badge/Deployment-Edge%20Computing-6e40c9?style=flat-square)
+![GitOps](https://img.shields.io/badge/GitOps-Rancher%20Fleet-ff6f00?style=flat-square&logo=git)
+![Linux](https://img.shields.io/badge/OS-Linux-fcc624?style=flat-square&logo=linux&logoColor=black)
+![Status](https://img.shields.io/badge/Status-Actively%20Maintained-success?style=flat-square)
 
 ## 1 Big Picture (Mental Model)
 
@@ -349,3 +356,4 @@ with OS-level stability guarantees.
 This is **exactly** how production edge clusters are built - just on smaller hardware, deliberately designed and tested end-to-end.
 
 ---
+
