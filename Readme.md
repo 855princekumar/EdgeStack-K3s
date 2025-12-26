@@ -25,17 +25,35 @@ Think of your setup as **three layers**:
 
 The repository is designed for **fast, deterministic cluster bring-up**, not for fully managed HA cloud replacement.
 
-![Image](https://geraldonit.com/wp-content/uploads/2024/12/k3s-cluster-topology.png)
+---
 
-![Image](https://docs.k3s.io/assets/images/how-it-works-k3s-revised-9c025ef482404bca2e53a89a0ba7a3c5.svg)
+## 2 Cluster Evolution & Performance Context
 
-![Image](https://www.rancher.com/assets/img/products/k3s/Rancher-Continuous-Delivery-Diagram-4.png)
+<img width="600" height="2000" alt="Unified Poster" src="https://github.com/user-attachments/assets/8c0420cb-c273-453f-9afe-859a660af3d6" />
 
-![Image](https://microsoft.github.io/ai-at-edge/assets/images/rpi-cluster_diagram.PNG)
+> This poster documents the **iterative evolution** of the EdgeStack-K3s cluster – from an early multi-node Raspberry Pi 3B+ setup to a compact, performance-optimized Raspberry Pi 4 deployment.
+>
+> The architecture, workloads, and orchestration layer (K3s + Rancher) remained consistent across phases, enabling **practical performance comparison** rather than synthetic benchmarking.
+
+### Observed Outcomes (Same Workloads, Different Hardware)
+
+| Dimension | Pi 3B+ Cluster (7–8 nodes) | Pi 4 Cluster (2 nodes) |
+|---------|----------------------------|------------------------|
+| Total usable RAM | ~7 GB | 4-8 GB |
+| CPU class | Cortex-A53 | Cortex-A72 |
+| Network | USB 2–backed Ethernet | Native Gigabit |
+| Pod density | Low | High |
+| Control-plane overhead | Higher | Lower |
+| Power consumption | ~2.5–3× higher | Reduced |
+| Physical footprint | Large | Compact |
+| Cable complexity | High | Minimal |
+
+> **Key takeaway:**  
+> For K3s-based edge workloads, a **2-node Raspberry Pi 4 cluster delivers comparable application-level performance** to a much larger Raspberry Pi 3B+ cluster while significantly reducing cost, power draw, and infrastructure complexity.
 
 ---
 
-## 2 What Each Node Actually Does
+## 3 What Each Node Actually Does
 
 ### Control Plane (dcn1)
 
@@ -48,7 +66,7 @@ It runs:
 * Controller manager (keeps desired vs actual state)
 * Embedded datastore (SQLite by default in K3s)
 
-**It does NOT run your apps by default.**
+**It does NOT run your apps by default.**  
 It decides *where* apps should run.
 
 ### Control Plane Design Choice
@@ -64,7 +82,7 @@ Behavior:
 - Existing workloads continue during control-plane downtime
 - New scheduling and cluster mutations pause until recovery
 
-This mirrors many real-world **edge Kubernetes deployments**, where
+This mirrors many real-world **edge Kubernetes deployments**, where  
 control-plane availability is a tradeoff rather than a requirement.
 
 ---
@@ -80,7 +98,7 @@ Each worker:
 * Pulls container images
 * Runs application pods
 
-Workers do **zero coordination** themselves.
+Workers do **zero coordination** themselves.  
 They strictly obey the control plane.
 
 ---
@@ -125,14 +143,14 @@ Think of Rancher as:
 
 ---
 
-## 3 What Happens When we Run the Scripts
+## 4 What Happens When we Run the Scripts
 
 ### Script 1 - Master Bootstrap
 
 **Sequence**
 
 1. OS updated
-2. Linux kernel cgroups enabled
+2. Linux kernel cgroups enabled  
    (mandatory for containers)
 3. K3s server starts
 4. API server opens on port `6443`
@@ -180,12 +198,12 @@ Master → Worker:
 2. Rancher container launched
 3. Rancher UI exposed on HTTPS
 
-**Important**
+**Important**  
 Rancher is **completely separate** from K3s binaries.
 
 ---
 
-## 4 How Rancher Connects to the Cluster
+## 5 How Rancher Connects to the Cluster
 
 This is the most misunderstood part
 
@@ -217,7 +235,7 @@ Kubernetes API (dcn1)
 
 ---
 
-## 5 How a Deployment Actually Runs (Example)
+## 6 How a Deployment Actually Runs (Example)
 
 Let’s say you deploy **NGINX from Rancher UI**.
 
@@ -242,7 +260,7 @@ You never log into dcn4.
 
 ---
 
-## 6 Networking Flow (Why Static IPs Matter)
+## 7 Networking Flow (Why Static IPs Matter)
 
 Your decision to use **static IPs was critical**.
 
@@ -262,7 +280,7 @@ Your decision to use **static IPs was critical**.
 
 ---
 
-## 7 Monitoring & Health (Where Your Python Script Fits)
+## 8 Monitoring & Health (Where Your Python Script Fits)
 
 My Python script operates at **Layer 0** (below Kubernetes).
 
@@ -281,9 +299,9 @@ Kubernetes monitoring operates at **Layer 1+**:
 
 They **complement**, not replace each other.
 
-## 7.1 Node-Level Memory Resilience (Edge-Pulse)
+### 8.1 Node-Level Memory Resilience (Edge-Pulse)
 
-To address frequent OOM conditions on low-memory nodes, the cluster uses
+To address frequent OOM conditions on low-memory nodes, the cluster uses  
 a custom node-side component ("Edge-Pulse") that provides:
 
 - Hybrid memory management (zram + disk-backed swap)
@@ -292,12 +310,12 @@ a custom node-side component ("Edge-Pulse") that provides:
 - Runtime validation and rollback
 - Node-local observability API
 
-This operates **below Kubernetes**, complementing pod-level memory limits
+This operates **below Kubernetes**, complementing pod-level memory limits  
 with OS-level stability guarantees.
 
 ---
 
-## 8 Failure Scenarios (And What Happens)
+## 9 Failure Scenarios (And What Happens)
 
 ### Worker Power Loss
 
@@ -319,7 +337,7 @@ with OS-level stability guarantees.
 
 ---
 
-## 9 Why This Design Is Correct for Edge / IoT
+## 10 Why This Design Is Correct for Edge / IoT
 
 - Lightweight (K3s)
 - Deterministic (static IPs)
@@ -328,6 +346,6 @@ with OS-level stability guarantees.
 - Survives node loss
 - Scales horizontally
 
-This is **exactly** how production edge clusters are built, just smaller hardware as i designed and tested this one.
+This is **exactly** how production edge clusters are built - just on smaller hardware, deliberately designed and tested end-to-end.
 
 ---
