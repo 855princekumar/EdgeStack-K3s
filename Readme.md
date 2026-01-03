@@ -7,6 +7,10 @@
 ![Linux](https://img.shields.io/badge/OS-Linux-fcc624?style=flat-square&logo=linux&logoColor=black)
 ![Status](https://img.shields.io/badge/Status-Actively%20Maintained-success?style=flat-square)
 
+<img width="284" height="956" alt="cluster" src="https://github.com/user-attachments/assets/5fea372c-b5dc-4ffd-a24f-010b5325bb32" />
+<img width="200" height="488" alt="pi-cluster - Copy" src="https://github.com/user-attachments/assets/6cfb42fe-3bf2-4d04-8ac2-71aa18c4e5ce">
+<img width="252" height="324" alt="pi-cluster - Copy (2)" src="https://github.com/user-attachments/assets/26cb4278-aeb7-4b05-812c-18c0624154b9" >
+
 ## 1 Big Picture (Mental Model)
 
 Think of your setup as **three layers**:
@@ -27,7 +31,6 @@ Think of your setup as **three layers**:
 │  Control Plane + Workers   │
 └────────────────────────────┘
 ```
-
 **Nothing is random. Everything is deterministic and role-based.**
 
 The repository is designed for **fast, deterministic cluster bring-up**, not for fully managed HA cloud replacement.
@@ -356,4 +359,5 @@ with OS-level stability guarantees.
 This is **exactly** how production edge clusters are built - just on smaller hardware, deliberately designed and tested end-to-end.
 
 ---
+
 
